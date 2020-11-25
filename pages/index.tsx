@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { GetStaticPropsResult } from 'next'
+import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { ReactNode } from 'react'
@@ -12,7 +12,7 @@ type StaticProps = {
   postsData: PostMeta[]
 }
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<StaticProps>> {
+export const getStaticProps: GetStaticProps<StaticProps> = async () => {
   const postsData: PostMeta[] = getSortedPostsData()
   return {
     props: { postsData }

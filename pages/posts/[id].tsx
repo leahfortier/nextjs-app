@@ -1,4 +1,4 @@
-import { GetStaticPathsResult, GetStaticPropsResult } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 import { ReactNode } from 'react'
 import Date from '../../components/date'
@@ -17,7 +17,7 @@ type StaticProps = {
 type PathParams = { params: Id }
 type Id = { id: string }
 
-export async function getStaticPaths(): Promise<GetStaticPathsResult<Id>> {
+export const getStaticPaths: GetStaticPaths<Id> = async () => {
     const ids: string[] = getAllPostIds()
     const paths: PathParams[] = ids.map(id => ({ params: { id } }))
     return {
@@ -26,7 +26,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult<Id>> {
     }
 }
 
-export async function getStaticProps({ params }: PathParams): Promise<GetStaticPropsResult<StaticProps>> {
+export const getStaticProps: GetStaticProps<StaticProps> = async ({ params }: PathParams) => {
     const postData: PostData = await getPostData(params.id)
     return {
         props: { ...postData }
