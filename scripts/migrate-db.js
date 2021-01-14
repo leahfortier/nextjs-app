@@ -26,21 +26,16 @@ async function query(q) {
   }
 }
 
-// Create "entries" table if doesn't exist
+// Create table if doesn't exist
 async function migrate() {
   try {
     await query(`
-    CREATE TABLE IF NOT EXISTS entries (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      title TEXT NOT NULL,
-      content TEXT NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at 
-        TIMESTAMP 
-        NOT NULL 
-        DEFAULT CURRENT_TIMESTAMP 
-        ON UPDATE CURRENT_TIMESTAMP
-    )
+      CREATE TABLE puppy_blog (
+        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(100) NOT NULL,
+        content TEXT NOT NULL,
+        date DATE NOT NULL
+      )
     `)
     console.log('migration ran successfully')
   } catch (e) {
