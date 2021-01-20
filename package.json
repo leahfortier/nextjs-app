@@ -1,29 +1,60 @@
 {
-  "name": "learn-starter",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "migrate": "node scripts/migrate-db.js"
-  },
-  "dependencies": {
-    "classnames": "^2.2.6",
-    "date-fns": "^2.16.1",
-    "dotenv": "^8.2.0",
-    "gray-matter": "^4.0.2",
-    "next": "^10.0.0",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "remark": "^13.0.0",
-    "remark-html": "^13.0.1",
-    "serverless-mysql": "^1.5.4"
-  },
-  "devDependencies": {
-    "@types/classnames": "^2.2.11",
-    "@types/node": "^14.14.8",
-    "@types/react": "^16.9.56",
-    "typescript": "^4.0.5"
-  }
+    "name": "learn-starter",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "migrate": "node scripts/migrate-db.js"
+    },
+    "dependencies": {
+        "@auth0/auth0-react": "^1.2.0",
+        "@auth0/nextjs-auth0": "github:auth0/nextjs-auth0",
+        "@fontsource/roboto": "^4.1.0",
+        "@material-ui/core": "^4.11.2",
+        "@material-ui/icons": "^4.11.2",
+        "@material-ui/system": "^4.11.2",
+        "auth0": "^2.31.1",
+        "autoprefixer": "^10.2.3",
+        "bad-words": "^3.0.4",
+        "body-parser": "^1.19.0",
+        "bootstrap": "^4.6.0",
+        "classnames": "^2.2.6",
+        "date-fns": "^2.16.1",
+        "dotenv": "^8.2.0",
+        "dotenv-webpack": "^6.0.0",
+        "express": "^4.17.1",
+        "fontsource-roboto": "^4.0.0",
+        "gray-matter": "^4.0.2",
+        "install": "^0.13.0",
+        "isomorphic-fetch": "^3.0.0",
+        "jquery": "^3.5.1",
+        "lodash": "^4.17.20",
+        "next": "^10.0.5",
+        "npm": "^6.14.11",
+        "popper.js": "^1.16.1",
+        "react": "^16.14.0",
+        "react-bootstrap": "^1.4.3",
+        "react-dom": "^16.13.1",
+        "react-router-dom": "^5.2.0",
+        "remark": "^13.0.0",
+        "remark-html": "^13.0.1",
+        "serverless-mysql": "^1.5.4",
+        "styled-components": "^5.2.1",
+        "stylelint": "^13.9.0",
+        "swr": "^0.3.11",
+        "tailwind": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/classnames": "^2.2.11",
+        "@types/node": "^14.14.8",
+        "@types/react": "^16.9.56",
+        "postcss": "^8.2.4",
+        "postcss-preset-env": "^6.7.0",
+        "stylelint-config-recommended": "^3.0.0",
+        "tailwindcss": "^2.0.2",
+        "tsconfig-paths": "^3.9.0",
+        "typescript": "^4.0.5"
+    }
 }

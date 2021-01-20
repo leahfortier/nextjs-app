@@ -1,0 +1,39 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    width: 32rem;
+    position: relative;
+    background-color: rgb(242, 252, 239);
+    min-height: 100vh;
+    margin: auto;
+}
+
+@media screen and (max-width: 600px) {
+    .layout {
+        width: 100%;
+    }
+}
+
+.layout .box {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(252, 239, 241);
+}
+
+.layout .box .buttonList {
+    display: flex;
+    flex-flow: row wrap;
+    align-content: space-between;
+    gap: 0.8rem;
+    padding: 0.8rem;
+    margin: 0px;
+    width: 100%;
+}
+
+.layout .navbar {
+    background-color: rgb(221, 237, 250);
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
