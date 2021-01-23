@@ -21,6 +21,6 @@
         "isolatedModules": true,
         "jsx": "preserve"
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/thoughts-api.ts", "src/server.ts"],
+    "include": ["**/*.ts", "**/*.tsx"],
     "exclude": ["node_modules"]
 }
