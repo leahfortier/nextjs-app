@@ -5,6 +5,7 @@ import { Box, Grid } from "@material-ui/core";
 import { ServerStyleSheets } from "@material-ui/core/styles";
 import Head from "next/head";
 import React, { ReactNode } from "react";
+import { AuthUser } from "src/user/user";
 import LoginButton from "./login-button";
 
 const sheets = new ServerStyleSheets();
@@ -19,10 +20,15 @@ export default function Layout({ children }): JSX.Element {
         body = <div>Loading...</div>;
     } else if (!isAuthenticated && !user) {
         body = <LoginButton />;
-    } else if (!isAuthenticated || error) {
+    } else if (!isAuthenticated || !user || error) {
         body = <div>Oh no!! Error: {error}</div>;
     } else {
-        body = children;
+        const full_user = user as AuthUser;
+        if (!full_user.email_verified) {
+            body = <div>Hello, {full_user.name}! Please verify your email address to continue!!</div>;
+        } else {
+            body = children;
+        }
     }
 
     return (
