@@ -1,4 +1,5 @@
 import { fetchUrl } from "@/lib/fetcher";
+import CacheService from "@/lib/cache";
 import { Auth0ContextInterface, useAuth0 } from "@auth0/auth0-react";
 
 export type AuthUser = {
@@ -35,26 +36,31 @@ export type User = {
 export async function loadUser(): Promise<User> {
     const authUser: AuthUser = getAuthUser();
     const email: string = authUser.email;
-    const url: string = `/api/get-user?email=${email}`;
+    const key: string = CacheService.createKey("get-user", email);
 
-    let userRow: UserRow;
+    const cached: string = await CacheService.get(key, async () => {
+        const userRow: UserRow = await loadUserRow(email);
+        const user: User = {
+            authUser: authUser,
+            userRow: userRow,
+        };
+        return JSON.stringify(user);
+    });
 
-    const fetched = await fetchUrl(url);
+    return JSON.parse(cached);
+}
+
+async function loadUserRow(email: string): Promise<UserRow> {
+    const fetched = await fetchUrl(`/api/get-user?email=${email}`);
     if (!fetched) {
-        userRow = await addUser(email);
+        return await addUser(email);
     } else if (!Array.isArray(fetched)) {
         throw Error("Unexpected data type for loadUser response:" + fetched);
     } else if (fetched.length != 1) {
         throw Error("Too many users found????");
     } else {
-        userRow = fetched[0];
+        return fetched[0];
     }
-
-    const user: User = {
-        authUser: authUser,
-        userRow: userRow,
-    };
-    return user;
 }
 
 async function addUser(email: string): Promise<UserRow> {
