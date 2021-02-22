@@ -8,7 +8,7 @@ export default function UserInfo(): JSX.Element {
 
     if (loading) {
         loadUser()
-            .then((result) => {
+            .then((result: User) => {
                 setUser(result);
             })
             .finally(() => {
@@ -25,7 +25,7 @@ export default function UserInfo(): JSX.Element {
     return (
         <div>
             <p>Name: {user.authUser.name}</p>
-            <p>{JSON.stringify(user)}</p>
+            <p>User: {JSON.stringify(user)}</p>
         </div>
     );
 }

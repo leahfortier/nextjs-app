@@ -1,6 +1,6 @@
+import { UserTable } from "@/sql/config";
+import { runQuery } from "@/sql/db";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { UserTable } from "src/sql/config";
-import { runQuery } from "src/sql/db";
 
 // type ResponseProps = ValueMap<UserTableProps> | { message: string };
 const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
