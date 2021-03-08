@@ -1,6 +1,6 @@
+import { loadUser, User } from "@/user/user";
 import { UseState } from "@/util/util";
 import React, { useState } from "react";
-import { loadUser, User } from "src/user/user";
 
 export default function UserInfo(): JSX.Element {
     const [user, setUser]: UseState<User> = useState(null);
@@ -24,7 +24,6 @@ export default function UserInfo(): JSX.Element {
 
     return (
         <div>
-            <p>Name: {user.authUser.name}</p>
             <p>User: {JSON.stringify(user)}</p>
         </div>
     );

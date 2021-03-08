@@ -1,9 +1,9 @@
 import useSWR from "swr";
 
-async function fetcher(url: string) {
-    const res = await window.fetch(url);
-    return await res.json();
-}
+const fetcher = async (url: string) => {
+    const response = await fetch(url);
+    return response.json();
+};
 
 export function useEntries() {
     const { data, error } = useSWR(`/api/get-entries`, fetcher);

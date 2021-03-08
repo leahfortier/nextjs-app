@@ -1,8 +1,8 @@
 export async function fetchUrl(url: string) {
-    let res = await fetch(url);
-    let json = await res.json();
+    let response = await fetch(url);
+    let json = await response.json();
 
-    if (!res.ok) {
+    if (!response.ok) {
         throw Error(json.message);
     } else if (!json || json.length == 0) {
         return null;
