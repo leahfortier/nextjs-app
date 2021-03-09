@@ -1,11 +1,10 @@
 import CacheService from "@/lib/cache";
 import { fetchUrl } from "@/lib/fetcher";
-import { Password } from "@/util/auth";
 import { getSession, Session } from "next-auth/client";
 
 export type UserData = {
     name?: string;
-    password: Password;
+    hashedPassword: string;
 };
 
 export type UserRow = {

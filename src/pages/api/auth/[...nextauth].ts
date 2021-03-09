@@ -1,4 +1,3 @@
-import { verifyPassword } from "@/util/auth";
 import { tryLogin } from "@/user/user-server";
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";

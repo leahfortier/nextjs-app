@@ -2,15 +2,20 @@ import { UserTable, UserTableProps } from "@/sql/config";
 import { runQuery } from "@/sql/db";
 import { Query } from "@/sql/query";
 import { ColumnMap, SqlTable } from "@/sql/table";
-import { UserRow } from "@/user/user";
 import { createPassword, verifyPassword } from "@/util/auth";
+import { UserRow } from "./user";
 
 export async function tryLogin(email: string, password: string): Promise<boolean> {
-    const user: UserRow = await lookupUser(email);
-    if (!user) {
-        return addUser(email, password);
-    } else {
-        return verifyPassword(password, user.data.password);
+    try {
+        const user: UserRow = await lookupUser(email);
+        if (!user) {
+            return addUser(email, password);
+        } else {
+            return verifyPassword(password, user.data.hashedPassword);
+        }
+    } catch (e) {
+        console.log("Unexpected error occurred: ", e, e.message);
+        return false;
     }
 }
 
@@ -26,7 +31,7 @@ export async function addUser(email: string, password: string): Promise<boolean>
         id: undefined,
         email: email,
         data: {
-            password: createPassword(password),
+            hashedPassword: createPassword(password),
         },
     };
 
@@ -37,11 +42,11 @@ export async function addUser(email: string, password: string): Promise<boolean>
         data: JSON.stringify(userRow.data),
     });
 
-    console.log("Running add Query: " + query);
+    console.log("Running add query: " + query);
     const results = await runQuery(query);
     const insertId = results["insertId"];
     if (!Number.isInteger(insertId)) {
-        throw Error("Unknown response from /add-user: " + JSON.stringify(results));
+        throw Error("Unknown response from adding user: " + JSON.stringify(results));
     }
 
     // Note: I know this isn't returning the userRow anymore but like I don't wanna delete
@@ -53,9 +58,9 @@ export async function addUser(email: string, password: string): Promise<boolean>
 export async function lookupUser(email: string): Promise<UserRow> {
     const table: SqlTable<UserTableProps> = UserTable;
     const cols: ColumnMap<UserTableProps> = table.cols;
-    const query: string = new Query(UserTable).where(cols.email.equals(email)).toQuery();
+    const query: string = new Query(table).where(cols.email.equals(email)).toQuery();
 
-    console.log("Running lookup Query: " + query);
+    console.log("Running lookup query: " + query);
     const results = await runQuery(query);
     if (!Array.isArray(results)) {
         throw Error("Unexpected data type for lookupUser query:" + results);
@@ -67,6 +72,11 @@ export async function lookupUser(email: string): Promise<UserRow> {
         // } else if (!(results[0] as UserRow)) {
         // throw Error("Unexpected data type for lookupUser query:" + results);
     } else {
-        return results[0] as UserRow;
+        const userRow: UserRow = {
+            id: +results[0].id,
+            email: results[0].email,
+            data: JSON.parse(results[0].data),
+        };
+        return userRow;
     }
 }
