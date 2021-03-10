@@ -1,15 +1,18 @@
-import { Column } from "./column";
+import { Column, DataType } from "./column";
 
 export type ColumnMap<Keys extends string> = Record<Keys, Column>;
 export type ValueMap<Keys extends string> = Record<Keys, string>;
 
 export class SqlTable<Keys extends string> {
     name: string;
-    cols: ColumnMap<Keys>;
+    cols: ColumnMap<"id" | Keys>;
 
     constructor(table_name: string, cols: ColumnMap<Keys>) {
         this.name = table_name;
-        this.cols = cols;
+        this.cols = {
+            id: new Column("id", DataType.INT).asAutoKey(),
+            ...cols,
+        };
     }
 
     create(): string {
@@ -36,6 +39,21 @@ export class SqlTable<Keys extends string> {
         let def = "INSERT INTO `" + this.name + "`";
         def += " (" + cols.join(", ") + ")";
         def += " VALUES (" + vals.join(", ") + ")";
+
+        return def;
+    }
+
+    update<K extends Keys>(id: number, values: ValueMap<K>): string {
+        const set: string[] = [];
+        for (let key in values) {
+            const col = this.cols[key];
+            const val = values[key];
+            set.push(col.equals(val));
+        }
+
+        let def = "UPDATE " + this.name;
+        def += " SET " + set.join(", ");
+        def += " WHERE " + this.cols.id.equals(id.toString());
 
         return def;
     }

@@ -24,7 +24,7 @@ export async function loadUser(): Promise<User> {
     const key: string = CacheService.createKey("get-user", email);
 
     const cached: string = await CacheService.get(key, async () => {
-        const userRow: UserRow = await fetchUserRow();
+        const userRow: UserRow = await fetchGetUser();
         const user: User = {
             session: session,
             userRow: userRow,
@@ -35,11 +35,15 @@ export async function loadUser(): Promise<User> {
     return JSON.parse(cached);
 }
 
-async function fetchUserRow(): Promise<UserRow> {
+async function fetchGetUser(): Promise<UserRow> {
     const fetched = await fetchUrl(`/api/get-user`);
     if (!fetched) {
         throw Error("No data found for current user.");
     } else {
         return fetched;
     }
+}
+
+export async function fetchUpdateName(name: string): Promise<void> {
+    await fetchUrl(`/api/update-name?name=${name}`);
 }

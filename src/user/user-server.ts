@@ -37,7 +37,6 @@ export async function addUser(email: string, password: string): Promise<boolean>
 
     // TODO: Creating this object should be a method on the UserRow
     const query: string = UserTable.add({
-        id: undefined,
         email: email,
         data: JSON.stringify(userRow.data),
     });
@@ -79,4 +78,14 @@ export async function lookupUser(email: string): Promise<UserRow> {
         };
         return userRow;
     }
+}
+
+export async function updateRow(row: UserRow): Promise<void> {
+    const query: string = UserTable.update(row.id, {
+        data: JSON.stringify(row.data),
+    });
+
+    console.log("Running update Query: " + query);
+    const results = await runQuery(query);
+    console.log("Results: ", JSON.stringify(results));
 }
