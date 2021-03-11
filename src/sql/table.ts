@@ -43,7 +43,7 @@ export class SqlTable<Keys extends string> {
         return def;
     }
 
-    update<K extends Keys>(id: number, values: ValueMap<K>): string {
+    update(id: number, values: ValueMap<Keys>): string {
         const set: string[] = [];
         for (let key in values) {
             const col = this.cols[key];

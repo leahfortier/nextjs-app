@@ -29,6 +29,8 @@ async function query(q) {
 // Create user and task tables if does not yet exist
 async function migrate() {
     try {
+        // TODO: This should use UserTable.create() instead of hardcoding the query, but I was having
+        // more trouble publishing the sql package than I would have liked...
         await query(`
             CREATE TABLE IF NOT EXISTS user_data (
                 id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,

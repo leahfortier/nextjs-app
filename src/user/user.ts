@@ -1,5 +1,8 @@
 import CacheService from "@/lib/cache";
 import { fetchUrl } from "@/lib/fetcher";
+import { UserTableProps } from "@/sql/config";
+import { ValueMap } from "@/sql/table";
+import { createPassword } from "@/util/auth";
 import { getSession, Session } from "next-auth/client";
 
 export type UserData = {
@@ -7,43 +10,39 @@ export type UserData = {
     hashedPassword: string;
 };
 
-export type UserRow = {
+export class UserRow {
     id: number;
     email: string;
     data: UserData;
-};
+
+    public static fromCredentials(email: string, password: string): UserRow {
+        const data: UserData = {
+            hashedPassword: createPassword(password),
+        };
+
+        // Id is auto-added when added to the table
+        return new UserRow(undefined, email, data);
+    }
+
+    public static fromTable(results: ValueMap<"id" | UserTableProps>): UserRow {
+        return new UserRow(+results.id, results.email, JSON.parse(results.data));
+    }
+
+    private constructor(id: number, email: string, data: UserData) {
+        this.id = id;
+        this.email = email;
+        this.data = data;
+    }
+
+    public toProps(): ValueMap<UserTableProps> {
+        return {
+            email: this.email,
+            data: JSON.stringify(this.data),
+        };
+    }
+}
 
 export type User = {
     session: Session;
     userRow: UserRow;
 };
-
-export async function loadUser(): Promise<User> {
-    const session: Session = await getSession();
-    const email: string = session.user.email;
-    const key: string = CacheService.createKey("get-user", email);
-
-    const cached: string = await CacheService.get(key, async () => {
-        const userRow: UserRow = await fetchGetUser();
-        const user: User = {
-            session: session,
-            userRow: userRow,
-        };
-        return JSON.stringify(user);
-    });
-
-    return JSON.parse(cached);
-}
-
-async function fetchGetUser(): Promise<UserRow> {
-    const fetched = await fetchUrl(`/api/get-user`);
-    if (!fetched) {
-        throw Error("No data found for current user.");
-    } else {
-        return fetched;
-    }
-}
-
-export async function fetchUpdateName(name: string): Promise<void> {
-    await fetchUrl(`/api/update-name?name=${name}`);
-}

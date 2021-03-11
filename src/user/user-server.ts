@@ -2,7 +2,7 @@ import { UserTable, UserTableProps } from "@/sql/config";
 import { runQuery } from "@/sql/db";
 import { Query } from "@/sql/query";
 import { ColumnMap, SqlTable } from "@/sql/table";
-import { createPassword, verifyPassword } from "@/util/auth";
+import { verifyPassword } from "@/util/auth";
 import { UserRow } from "./user";
 
 export async function tryLogin(email: string, password: string): Promise<boolean> {
@@ -27,19 +27,8 @@ export async function addUser(email: string, password: string): Promise<boolean>
         return false;
     }
 
-    const userRow: UserRow = {
-        id: undefined,
-        email: email,
-        data: {
-            hashedPassword: createPassword(password),
-        },
-    };
-
-    // TODO: Creating this object should be a method on the UserRow
-    const query: string = UserTable.add({
-        email: email,
-        data: JSON.stringify(userRow.data),
-    });
+    const userRow: UserRow = UserRow.fromCredentials(email, password);
+    const query: string = UserTable.add(userRow.toProps());
 
     console.log("Running add query: " + query);
     const results = await runQuery(query);
@@ -68,22 +57,13 @@ export async function lookupUser(email: string): Promise<UserRow> {
     } else if (results.length == 0) {
         // No users found with lookup email
         return null;
-        // } else if (!(results[0] as UserRow)) {
-        // throw Error("Unexpected data type for lookupUser query:" + results);
     } else {
-        const userRow: UserRow = {
-            id: +results[0].id,
-            email: results[0].email,
-            data: JSON.parse(results[0].data),
-        };
-        return userRow;
+        return UserRow.fromTable(results[0]);
     }
 }
 
 export async function updateRow(row: UserRow): Promise<void> {
-    const query: string = UserTable.update(row.id, {
-        data: JSON.stringify(row.data),
-    });
+    const query: string = UserTable.update(row.id, row.toProps());
 
     console.log("Running update Query: " + query);
     const results = await runQuery(query);

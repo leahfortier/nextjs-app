@@ -1,4 +1,5 @@
-import { fetchUpdateName, loadUser, User } from "@/user/user";
+import { User } from "@/user/user";
+import { fetchUpdateName, loadUser } from "@/user/user-client";
 import { UseState } from "@/util/util";
 import React, { ReactNode, useState } from "react";
 import { FormButton, FormText } from "./form-button";
