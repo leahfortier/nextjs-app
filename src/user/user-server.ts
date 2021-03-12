@@ -17,16 +17,11 @@ function setCache(userRow: UserRow): UserRow {
 }
 
 export async function tryLogin(email: string, password: string): Promise<boolean> {
-    try {
-        const user: UserRow = await lookupUserByEmail(email);
-        if (!user) {
-            return addUser(email, password);
-        } else {
-            return verifyPassword(password, user.data.hashedPassword);
-        }
-    } catch (e) {
-        console.log("Unexpected error occurred: ", e, e.message);
-        return false;
+    const user: UserRow = await lookupUserByEmail(email);
+    if (!user) {
+        return addUser(email, password);
+    } else {
+        return verifyPassword(password, user.data.hashedPassword);
     }
 }
 

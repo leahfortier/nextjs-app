@@ -12,12 +12,10 @@ export class CacheService<T> {
     }
 
     public get(key: Key): T {
-        console.log("Getting cached key " + key + ":", this.cache.get(key));
         return this.cache.get(key);
     }
 
     public set(key: Key, value: T): T {
-        console.log("Setting cached key " + key + ":", value);
         this.cache.set(key, value);
         return value;
     }

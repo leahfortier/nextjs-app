@@ -1,22 +1,16 @@
 import { fetchUrl } from "@/lib/fetcher";
 import { getSession, Session } from "next-auth/client";
-import { User, UserRow } from "./user";
+import { UserRow } from "./user";
 
-let current: User = undefined;
+let current: UserRow = undefined;
 
-export async function loadUser(): Promise<User> {
+export async function loadUser(): Promise<UserRow> {
     const session: Session = await getSession();
-    if (current && current.session.user.email == session.user.email) {
-        current.session = session;
+    if (current && current.email == session.user.email) {
         return current;
     }
 
-    const userRow: UserRow = await fetchGetUser();
-    current = {
-        session: session,
-        userRow: userRow,
-    };
-
+    current = await fetchGetUser();
     return current;
 }
 

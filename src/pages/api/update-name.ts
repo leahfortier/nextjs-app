@@ -1,15 +1,14 @@
+import { getUserSession, UserSession } from "@/user/session";
 import { UserRow } from "@/user/user";
-import { lookupUserByEmail, updateRow } from "@/user/user-server";
+import { lookupUserById, updateRow } from "@/user/user-server";
 import { getUrlParameter } from "@/util/util";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { getSession, Session } from "next-auth/client";
 
 const handler: NextApiHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-    // TODO: Add id to the session in a separate internal getSession method thing
-    const session: Session = await getSession({ req });
+    const session: UserSession = await getUserSession(req);
     try {
         const name: string = getUrlParameter(req, "name");
-        const user: UserRow = await lookupUserByEmail(session.user.email);
+        const user: UserRow = await lookupUserById(session.userId);
         if (user.data.name != name) {
             user.data.name = name;
             await updateRow(user);

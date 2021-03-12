@@ -1,6 +1,5 @@
 import { UserTableVals } from "@/sql/config";
 import { createPassword } from "@/util/auth";
-import { Session } from "next-auth/client";
 
 export type UserData = {
     name?: string;
@@ -39,8 +38,3 @@ export class UserRow {
         };
     }
 }
-
-export type User = {
-    session: Session;
-    userRow: UserRow;
-};

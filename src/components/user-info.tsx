@@ -1,18 +1,21 @@
-import { User } from "@/user/user";
+import { UserRow } from "@/user/user";
 import { fetchUpdateName, loadUser } from "@/user/user-client";
 import { UseState } from "@/util/util";
 import React, { ReactNode, useState } from "react";
 import { FormButton, FormText } from "./form-button";
 
 export default function UserInfo(): JSX.Element {
-    const [user, setUser]: UseState<User> = useState(null);
+    const [user, setUser]: UseState<UserRow> = useState(null);
     const [loading, setLoading]: UseState<boolean> = useState(true);
     const [name, setName]: UseState<string> = React.useState("");
 
     if (loading) {
         loadUser()
-            .then((result: User) => {
+            .then((result: UserRow) => {
                 setUser(result);
+            })
+            .catch((error: Error) => {
+                console.log("Error while loading user:", error.message);
             })
             .finally(() => {
                 setLoading(false);
