@@ -62,11 +62,7 @@ export class Column {
         return toString(this.type, value);
     }
 
-    equals(value: string): string {
-        return this.name + "=" + this.toString(value);
-    }
-
-    in(set: string[]): string {
-        return this.name + " IN (" + set.map((value) => this.toString(value)).join(", ") + ")";
+    equals(value: string | number): string {
+        return this.name + "=" + this.toString(value.toString());
     }
 }

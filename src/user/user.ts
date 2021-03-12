@@ -1,9 +1,6 @@
-import CacheService from "@/lib/cache";
-import { fetchUrl } from "@/lib/fetcher";
-import { UserTableProps } from "@/sql/config";
-import { ValueMap } from "@/sql/table";
+import { UserTableVals } from "@/sql/config";
 import { createPassword } from "@/util/auth";
-import { getSession, Session } from "next-auth/client";
+import { Session } from "next-auth/client";
 
 export type UserData = {
     name?: string;
@@ -24,7 +21,7 @@ export class UserRow {
         return new UserRow(undefined, email, data);
     }
 
-    public static fromTable(results: ValueMap<"id" | UserTableProps>): UserRow {
+    public static fromTable(results: UserTableVals): UserRow {
         return new UserRow(+results.id, results.email, JSON.parse(results.data));
     }
 
@@ -34,8 +31,9 @@ export class UserRow {
         this.data = data;
     }
 
-    public toProps(): ValueMap<UserTableProps> {
+    public toProps(): UserTableVals {
         return {
+            id: this.id.toString(),
             email: this.email,
             data: JSON.stringify(this.data),
         };

@@ -1,7 +1,9 @@
 import { Column, DataType } from "./column";
-import { SqlTable } from "./table";
+import { TableCols, SqlTable, TableVals } from "./table";
 
 export type UserTableProps = "email" | "data";
+export type UserTableCols = TableCols<UserTableProps>;
+export type UserTableVals = TableVals<UserTableProps>;
 
 export const UserTable: SqlTable<UserTableProps> = new SqlTable("user_data", {
     email: new Column("email", DataType.STRING),

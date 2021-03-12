@@ -1,55 +1,34 @@
 // Simple cache that is just a map in memory
-class Cache {
-    private cache: Map<string, string>;
+type Key = string | number;
+export class CacheService<T> {
+    private cache: Map<Key, T>;
 
     constructor() {
         this.cache = new Map();
     }
 
-    public async get(key: string, storeFunction: () => Promise<string>): Promise<string> {
-        if (this.cache.has(key)) {
-            return this.cache.get(key);
-        }
-
-        return await storeFunction().then((result: string) => {
-            this.cache.set(key, result);
-            return result;
-        });
+    public has(key: Key): boolean {
+        return this.cache.has(key);
     }
 
-    public del(...keys: string[]): void {
+    public get(key: Key): T {
+        console.log("Getting cached key " + key + ":", this.cache.get(key));
+        return this.cache.get(key);
+    }
+
+    public set(key: Key, value: T): T {
+        console.log("Setting cached key " + key + ":", value);
+        this.cache.set(key, value);
+        return value;
+    }
+
+    public del(...keys: Key[]): void {
         for (let key of keys) {
             this.cache.delete(key);
-        }
-    }
-
-    public delPrefix(prefix: string): void {
-        if (!prefix) {
-            return;
-        }
-
-        prefix = this.getPrefix(prefix);
-        for (const key in this.cache.keys()) {
-            if (key.startsWith(prefix)) {
-                this.del(key);
-            }
         }
     }
 
     public flush() {
         this.cache.clear();
     }
-
-    // Ex: "get-user", "username123", "user@email.com" -> __get-user__~username123~user@email.com
-    public createKey(prefix: string, ...ids: string[]): string {
-        ids.unshift(this.getPrefix(prefix));
-        return ids.join("~");
-    }
-
-    private getPrefix(prefix: string): string {
-        return "__" + prefix + "__";
-    }
 }
-
-const CacheService = new Cache();
-export default CacheService;

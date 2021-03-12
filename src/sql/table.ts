@@ -1,11 +1,14 @@
 import { Column, DataType } from "./column";
 
-export type ColumnMap<Keys extends string> = Record<Keys, Column>;
-export type ValueMap<Keys extends string> = Record<Keys, string>;
+type ColumnMap<Keys extends string> = Record<Keys, Column>;
+type ValueMap<Keys extends string> = Record<Keys, string>;
+
+export type TableCols<Keys extends string> = ColumnMap<"id" | Keys>;
+export type TableVals<Keys extends string> = ValueMap<"id" | Keys>;
 
 export class SqlTable<Keys extends string> {
     name: string;
-    cols: ColumnMap<"id" | Keys>;
+    cols: TableCols<Keys>;
 
     constructor(table_name: string, cols: ColumnMap<Keys>) {
         this.name = table_name;
@@ -43,7 +46,7 @@ export class SqlTable<Keys extends string> {
         return def;
     }
 
-    update(id: number, values: ValueMap<Keys>): string {
+    update(values: TableVals<Keys>): string {
         const set: string[] = [];
         for (let key in values) {
             const col = this.cols[key];
@@ -53,7 +56,7 @@ export class SqlTable<Keys extends string> {
 
         let def = "UPDATE " + this.name;
         def += " SET " + set.join(", ");
-        def += " WHERE " + this.cols.id.equals(id.toString());
+        def += " WHERE " + this.cols.id.equals(values.id);
 
         return def;
     }
