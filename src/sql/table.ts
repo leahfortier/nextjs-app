@@ -1,24 +1,23 @@
-import { Column, DataType } from "./column";
+import { Column } from "./column";
+import { Query } from "./query";
 
-type ColumnMap<Keys extends string> = Record<Keys, Column>;
-type ValueMap<Keys extends string> = Record<Keys, string>;
-
-export type TableCols<Keys extends string> = ColumnMap<"id" | Keys>;
-export type TableVals<Keys extends string> = ValueMap<"id" | Keys>;
+export type TableCols<Keys extends string> = Record<"id" | Keys, Column>;
+export type TableVals<Keys extends string> = Record<"id" | Keys, string>;
 
 export class SqlTable<Keys extends string> {
     name: string;
     cols: TableCols<Keys>;
 
-    constructor(table_name: string, cols: ColumnMap<Keys>) {
+    constructor(table_name: string, cols: TableCols<Keys>) {
         this.name = table_name;
-        this.cols = {
-            id: new Column("id", DataType.INT).asAutoKey(),
-            ...cols,
-        };
+        this.cols = cols;
     }
 
-    create(): string {
+    public asQuery(): Query {
+        return new Query(this.name);
+    }
+
+    public create(): string {
         let def = "CREATE TABLE IF NOT EXISTS " + this.name + " (\n";
         def += Object.keys(this.cols)
             .map((col) => this.cols[col].create())
@@ -27,7 +26,7 @@ export class SqlTable<Keys extends string> {
         return def;
     }
 
-    add(values: ValueMap<Keys>): string {
+    public add(values: TableVals<Keys>): string {
         const cols: string[] = [];
         const vals: string[] = [];
         for (let key in values) {
@@ -46,7 +45,7 @@ export class SqlTable<Keys extends string> {
         return def;
     }
 
-    update(values: TableVals<Keys>): string {
+    public update(values: TableVals<Keys>): string {
         const set: string[] = [];
         for (let key in values) {
             const col = this.cols[key];

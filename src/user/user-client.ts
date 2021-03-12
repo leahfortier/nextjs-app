@@ -25,5 +25,7 @@ async function fetchGetUser(): Promise<UserRow> {
 
 export async function fetchUpdateName(name: string): Promise<void> {
     current = undefined;
-    await fetchUrl(`/api/update-name?name=${name}`);
+    if (name) {
+        await fetchUrl(`/api/update-name?name=${name}`);
+    }
 }

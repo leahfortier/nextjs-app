@@ -1,4 +1,4 @@
-import { UserSession } from "@/lib/session";
+import { UserSession } from "@/user/session";
 import { UserRow } from "@/user/user";
 import { lookupUserByEmail, tryLogin } from "@/user/user-server";
 import NextAuth from "next-auth";
@@ -35,9 +35,6 @@ const options = {
             },
         }),
     ],
-    pages: {
-        // signIn: "/login",
-    },
 };
 
 export default (req: NextApiRequest, res: NextApiResponse): Promise<void> => NextAuth(req, res, options);

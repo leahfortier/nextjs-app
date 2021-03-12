@@ -3,7 +3,7 @@ type Key = string | number;
 export class CacheService<T> {
     private cache: Map<Key, T>;
 
-    constructor() {
+    public constructor() {
         this.cache = new Map();
     }
 

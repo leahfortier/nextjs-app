@@ -67,7 +67,7 @@ export async function lookupUserByEmail(email: string): Promise<UserRow> {
 
 async function lookupUser(condition: (cols: UserTableCols) => string): Promise<UserRow> {
     const table: SqlTable<UserTableProps> = UserTable;
-    const query: string = new Query(table).where(condition(table.cols)).toQuery();
+    const query: string = table.asQuery().where(condition(table.cols)).toQuery();
 
     console.log("Running lookup query: " + query);
     const results = await runQuery(query);
