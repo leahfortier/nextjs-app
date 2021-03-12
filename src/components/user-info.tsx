@@ -27,6 +27,7 @@ export default function UserInfo(): JSX.Element {
 
     const handleSaveName = () => {
         fetchUpdateName(name);
+        setLoading(true);
     };
 
     const changeNameButton: ReactNode = (
