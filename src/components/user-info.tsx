@@ -1,34 +1,48 @@
-import { Auth0ContextInterface, useAuth0 } from "@auth0/auth0-react";
-import React from "react";
-
-type User = {
-    // Both
-    nickname?: string;
-    name?: string;
-    picture?: string;
-    updated_at?: string;
-    email?: string;
-    email_verified?: boolean;
-    sub?: string;
-
-    // Google only
-    given_name?: string;
-    family_name?: string;
-    locale?: string;
-};
+import { UserRow } from "@/user/user";
+import { fetchUpdateName, loadUser } from "@/user/user-client";
+import { UseState } from "@/util/util";
+import React, { ReactNode, useState } from "react";
+import { FormButton, FormText } from "./form-button";
 
 export default function UserInfo(): JSX.Element {
-    const ctx: Auth0ContextInterface = useAuth0();
-    const user: User = ctx.user as User;
+    const [user, setUser]: UseState<UserRow> = useState(null);
+    const [loading, setLoading]: UseState<boolean> = useState(true);
+    const [name, setName]: UseState<string> = React.useState("");
 
-    if (!user) {
+    if (loading) {
+        loadUser()
+            .then((result: UserRow) => {
+                setUser(result);
+            })
+            .catch((error: Error) => {
+                console.log("Error while loading user:", error.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }
+
+    if (loading) {
+        return <div>Loading...</div>;
+    } else if (!user) {
         return null;
     }
 
+    const handleSaveName = () => {
+        fetchUpdateName(name);
+        setLoading(true);
+    };
+
+    const changeNameButton: ReactNode = (
+        <FormButton buttonText="Change Name" handleSave={handleSaveName}>
+            <FormText label="Name" onChange={(event) => setName(event.target.value)} />
+        </FormButton>
+    );
+
     return (
         <div>
-            <p>Name: {user.name}</p>
-            <p>{JSON.stringify(user)}</p>
+            <p>User: {JSON.stringify(user)}</p>
+            {changeNameButton}
         </div>
     );
 }

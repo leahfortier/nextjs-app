@@ -4,7 +4,9 @@
         "paths": {
             "@/components/*": ["src/components/*"],
             "@/lib/*": ["src/lib/*"],
+            "@/sql/*": ["src/sql/*"],
             "@/styles/*": ["src/styles/*"],
+            "@/user/*": ["src/user/*"],
             "@/util/*": ["src/util/*"]
         },
         "target": "es5",
